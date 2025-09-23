@@ -882,4 +882,269 @@
                     {
                         title: "Form the Head and Trunk",
                         description: "Shape the distinctive elephant head and long trunk.",
-                        image: "https://images.unsplash
+                        image: "https://images.unsplash.com/photo-1586105449897-20b5efeb3233?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+                    }
+                ]
+            }
+        ];
+
+        // DOM Elements
+        const homePage = document.getElementById('home-page');
+        const tutorialPage = document.getElementById('tutorial-page');
+        const featuredTutorialsGrid = document.getElementById('featured-tutorials-grid');
+        const tutorialDetail = document.getElementById('tutorial-detail');
+        const backButton = document.getElementById('back-button');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pageNavigation = document.getElementById('page-navigation');
+        const prevPage = document.getElementById('prev-page');
+        const nextPage = document.getElementById('next-page');
+        const homeLink = document.getElementById('home-link');
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+
+        // Current tutorial ID tracker
+        let currentTutorialId = null;
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderFeaturedTutorials();
+            setupEventListeners();
+        });
+
+        // Render featured tutorials on the home page
+        function renderFeaturedTutorials() {
+            featuredTutorialsGrid.innerHTML = '';
+            
+            tutorials.forEach(tutorial => {
+                const tutorialCard = document.createElement('div');
+                tutorialCard.className = 'tutorial-card';
+                tutorialCard.setAttribute('data-id', tutorial.id);
+                
+                tutorialCard.innerHTML = `
+                    <div class="card-image">
+                        <img src="${tutorial.image}" alt="${tutorial.title}">
+                    </div>
+                    <div class="card-content">
+                        <h3>${tutorial.title}</h3>
+                        <div class="card-meta">
+                            <span><i class="far fa-clock"></i> ${tutorial.duration}</span>
+                            <span class="difficulty ${tutorial.difficulty}">${tutorial.difficulty.charAt(0).toUpperCase() + tutorial.difficulty.slice(1)}</span>
+                        </div>
+                        <p>${tutorial.description}</p>
+                        <button class="btn view-tutorial-btn" style="margin-top: 1rem;">View Tutorial</button>
+                    </div>
+                `;
+                
+                featuredTutorialsGrid.appendChild(tutorialCard);
+            });
+            
+            // Add event listeners to tutorial cards
+            document.querySelectorAll('.tutorial-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const tutorialId = parseInt(this.getAttribute('data-id'));
+                    showTutorialPage(tutorialId);
+                });
+            });
+            
+            // Add event listeners to view tutorial buttons
+            document.querySelectorAll('.view-tutorial-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const tutorialId = parseInt(this.closest('.tutorial-card').getAttribute('data-id'));
+                    showTutorialPage(tutorialId);
+                });
+            });
+        }
+
+        // Show the tutorial detail page
+        function showTutorialPage(tutorialId) {
+            const tutorial = tutorials.find(t => t.id === tutorialId);
+            if (!tutorial) return;
+            
+            currentTutorialId = tutorialId;
+            
+            // Hide home page, show tutorial page
+            homePage.style.display = 'none';
+            tutorialPage.style.display = 'block';
+            pageNavigation.style.display = 'block';
+            
+            // Update navigation active state
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-page') === tutorial.category) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Render tutorial content
+            tutorialDetail.innerHTML = `
+                <div class="tutorial-header">
+                    <h2>${tutorial.title}</h2>
+                    <div class="tutorial-meta">
+                        <span><i class="far fa-user"></i> Mariano Zavala Style</span>
+                        <span><i class="far fa-calendar"></i> Published: June 15, 2023</span>
+                    </div>
+                    <div class="tutorial-stats">
+                        <span><i class="far fa-clock"></i> ${tutorial.duration}</span>
+                        <span><i class="far fa-chart-bar"></i> ${tutorial.difficulty.charAt(0).toUpperCase() + tutorial.difficulty.slice(1)}</span>
+                        <span><i class="far fa-eye"></i> ${Math.floor(Math.random() * 10000) + 5000} views</span>
+                    </div>
+                </div>
+                
+                <div class="tutorial-video">
+                    ${tutorial.video ? 
+                        `<iframe src="${tutorial.video}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` :
+                        `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1a2530;color:white;font-size:1.2rem;padding:2rem;text-align:center;">
+                            <i class="fas fa-book" style="font-size:3rem;margin-bottom:1rem;"></i>
+                            <p>Video tutorial not available. Following instructions from Satoshi Kamiya's "Works of Satoshi Kamiya" book.</p>
+                        </div>`
+                    }
+                </div>
+                
+                <div class="materials">
+                    <h3>Materials Needed</h3>
+                    <ul>
+                        ${tutorial.materials.map(material => `<li><i class="fas fa-check"></i> ${material}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="tutorial-steps">
+                    <h3>Step-by-Step Instructions</h3>
+                    ${tutorial.steps.map((step, index) => `
+                        <div class="step">
+                            <div class="step-number">${index + 1}</div>
+                            <div class="step-content">
+                                <h3>${step.title}</h3>
+                                <p>${step.description}</p>
+                            </div>
+                            <div class="step-image">
+                                <img src="${step.image}" alt="Step ${index + 1}">
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            // Update page navigation
+            updatePageNavigation();
+        }
+
+        // Update page navigation buttons
+        function updatePageNavigation() {
+            const currentIndex = tutorials.findIndex(t => t.id === currentTutorialId);
+            const prevTutorial = tutorials[currentIndex - 1];
+            const nextTutorial = tutorials[currentIndex + 1];
+            
+            if (prevTutorial) {
+                prevPage.style.display = 'inline-block';
+                prevPage.onclick = (e) => {
+                    e.preventDefault();
+                    showTutorialPage(prevTutorial.id);
+                };
+            } else {
+                prevPage.style.display = 'none';
+            }
+            
+            if (nextTutorial) {
+                nextPage.style.display = 'inline-block';
+                nextPage.onclick = (e) => {
+                    e.preventDefault();
+                    showTutorialPage(nextTutorial.id);
+                };
+            } else {
+                nextPage.style.display = 'none';
+            }
+        }
+
+        // Show the home page
+        function showHomePage() {
+            homePage.style.display = 'block';
+            tutorialPage.style.display = 'none';
+            pageNavigation.style.display = 'none';
+            
+            // Reset navigation active state
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-page') === 'home') {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.getAttribute('data-page');
+                    
+                    if (page === 'home') {
+                        showHomePage();
+                    } else {
+                        // Filter tutorials by category
+                        const categoryTutorials = tutorials.filter(t => t.category === page);
+                        if (categoryTutorials.length > 0) {
+                            showTutorialPage(categoryTutorials[0].id);
+                        }
+                    }
+                    
+                    // Update active state
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Back button
+            backButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                showHomePage();
+            });
+            
+            // Home link
+            homeLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                showHomePage();
+            });
+            
+            // Search functionality
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            // View all tutorials button
+            document.getElementById('view-all-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                showTutorialPage(tutorials[0].id);
+            });
+            
+            // View tutorials button
+            document.getElementById('view-tutorials-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                showTutorialPage(tutorials[0].id);
+            });
+        }
+
+        // Search functionality
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            if (!searchTerm) return;
+            
+            const foundTutorial = tutorials.find(t => 
+                t.title.toLowerCase().includes(searchTerm) || 
+                t.description.toLowerCase().includes(searchTerm) ||
+                t.category.toLowerCase().includes(searchTerm)
+            );
+            
+            if (foundTutorial) {
+                showTutorialPage(foundTutorial.id);
+            } else {
+                alert('No tutorials found for: ' + searchTerm);
+            }
+        }
+    </script>
+</body>
+</html>
