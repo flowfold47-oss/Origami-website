@@ -27,6 +27,9 @@
             background-color: var(--light);
             color: var(--text);
             line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
         /* Header Styles */
@@ -51,6 +54,8 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            text-decoration: none;
+            color: white;
         }
         
         .logo i {
@@ -116,6 +121,7 @@
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 1.5rem;
+            flex: 1;
         }
         
         .section-title {
@@ -212,6 +218,7 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
         }
         
         .tutorial-card:hover {
@@ -276,7 +283,12 @@
             color: #e74c3c;
         }
         
-        /* Tutorial Detail */
+        .difficulty.expert {
+            background: #e8eaf6;
+            color: #3f51b5;
+        }
+        
+        /* Tutorial Detail Page */
         .tutorial-detail {
             background: white;
             border-radius: 10px;
@@ -395,6 +407,28 @@
             color: var(--secondary);
         }
         
+        /* Page Navigation */
+        .page-navigation {
+            display: none;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .page-navigation a {
+            display: inline-block;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        .page-navigation a:hover {
+            background: var(--secondary);
+        }
+        
         /* Footer */
         footer {
             background: var(--dark);
@@ -483,6 +517,22 @@
             color: #aaa;
         }
         
+        /* Back Button */
+        .back-button {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .back-button:hover {
+            color: var(--secondary);
+        }
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .header-content {
@@ -517,22 +567,31 @@
                 align-items: center;
             }
         }
+        
+        /* Page-specific styles */
+        #home-page {
+            display: block;
+        }
+        
+        #tutorial-page {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header>
         <div class="header-content">
-            <div class="logo">
+            <a href="#" class="logo" id="home-link">
                 <i class="fas fa-dove"></i>
                 <div class="logo-text">
                     <h1>Origami Mastery</h1>
                     <p>Inspired by Mariano Zavala's tutorials</p>
                 </div>
-            </div>
+            </a>
             <div class="search-bar">
-                <input type="text" placeholder="Search for origami tutorials...">
-                <button class="btn"><i class="fas fa-search"></i></button>
+                <input type="text" placeholder="Search for origami tutorials..." id="search-input">
+                <button class="btn" id="search-button"><i class="fas fa-search"></i></button>
             </div>
         </div>
     </header>
@@ -541,170 +600,95 @@
     <nav>
         <div class="nav-container">
             <ul>
-                <li><a href="#" class="active"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="#"><i class="fas fa-star"></i> Featured</a></li>
-                <li><a href="#"><i class="fas fa-paw"></i> Animals</a></li>
-                <li><a href="#"><i class="fas fa-leaf"></i> Flowers</a></li>
-                <li><a href="#"><i class="fas fa-cube"></i> Modular</a></li>
-                <li><a href="#"><i class="fas fa-gift"></i> Holiday</a></li>
-                <li><a href="#"><i class="fas fa-user"></i> About</a></li>
+                <li><a href="#" class="nav-link active" data-page="home"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#" class="nav-link" data-page="animals"><i class="fas fa-paw"></i> Animals</a></li>
+                <li><a href="#" class="nav-link" data-page="flowers"><i class="fas fa-leaf"></i> Flowers</a></li>
+                <li><a href="#" class="nav-link" data-page="complex"><i class="fas fa-dragon"></i> Complex Models</a></li>
+                <li><a href="#" class="nav-link" data-page="modular"><i class="fas fa-cube"></i> Modular</a></li>
             </ul>
         </div>
     </nav>
     
     <!-- Main Content -->
     <div class="container">
-        <!-- Hero Section -->
-        <section class="hero">
-            <h2>Master the Art of Origami</h2>
-            <p>Step-by-step tutorials inspired by Mariano Zavala's clear and detailed teaching style. Learn to create beautiful paper creations from simple to complex designs.</p>
-            <a href="#" class="btn">Start Learning</a>
-            <a href="#" class="btn btn-outline">View All Tutorials</a>
-        </section>
-        
-        <!-- Featured Tutorials -->
-        <section class="featured-tutorials">
-            <div class="section-title">
-                <h2>Featured Tutorials</h2>
-            </div>
+        <!-- Home Page -->
+        <div id="home-page">
+            <!-- Hero Section -->
+            <section class="hero">
+                <h2>Master the Art of Origami</h2>
+                <p>Step-by-step tutorials inspired by Mariano Zavala's clear and detailed teaching style. Learn to create beautiful paper creations from simple to complex designs.</p>
+                <a href="#" class="btn" id="view-tutorials-btn">Start Learning</a>
+                <a href="#" class="btn btn-outline" id="view-all-btn">View All Tutorials</a>
+            </section>
             
-            <div class="tutorial-grid">
-                <!-- Tutorial Card 1 -->
-                <div class="tutorial-card">
-                    <div class="card-image">
-                        <img src="https://images.unsplash.com/photo-1585416354807-87e551067b73?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Origami Crane">
-                    </div>
-                    <div class="card-content">
-                        <h3>Elegant Origami Crane</h3>
-                        <div class="card-meta">
-                            <span><i class="far fa-clock"></i> 25 min</span>
-                            <span class="difficulty intermediate">Intermediate</span>
-                        </div>
-                        <p>Learn to fold the classic Japanese crane, a symbol of peace and longevity.</p>
-                        <a href="#" class="btn" style="margin-top: 1rem; display: inline-block;">View Tutorial</a>
-                    </div>
+            <!-- Featured Tutorials -->
+            <section class="featured-tutorials">
+                <div class="section-title">
+                    <h2>Featured Tutorials</h2>
                 </div>
                 
-                <!-- Tutorial Card 2 -->
-                <div class="tutorial-card">
-                    <div class="card-image">
-                        <img src="https://images.unsplash.com/photo-1518843025960-d60217f226f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Origami Rose">
-                    </div>
-                    <div class="card-content">
-                        <h3>Beautiful Origami Rose</h3>
-                        <div class="card-meta">
-                            <span><i class="far fa-clock"></i> 35 min</span>
-                            <span class="difficulty advanced">Advanced</span>
-                        </div>
-                        <p>Create a stunning paper rose that looks almost real. Perfect for gifts.</p>
-                        <a href="#" class="btn" style="margin-top: 1rem; display: inline-block;">View Tutorial</a>
-                    </div>
+                <div class="tutorial-grid" id="featured-tutorials-grid">
+                    <!-- Tutorial cards will be generated by JavaScript -->
                 </div>
-                
-                <!-- Tutorial Card 3 -->
-                <div class="tutorial-card">
-                    <div class="card-image">
-                        <img src="https://images.unsplash.com/photo-1578001268252-fa8d0dd94281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Origami Dragon">
-                    </div>
-                    <div class="card-content">
-                        <h3>Mythical Origami Dragon</h3>
-                        <div class="card-meta">
-                            <span><i class="far fa-clock"></i> 45 min</span>
-                            <span class="difficulty advanced">Advanced</span>
-                        </div>
-                        <p>Challenge yourself with this intricate dragon design. Impressive results!</p>
-                        <a href="#" class="btn" style="margin-top: 1rem; display: inline-block;">View Tutorial</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Tutorial Detail Section -->
-        <section class="tutorial-detail-section">
-            <div class="section-title">
-                <h2>Tutorial of the Week</h2>
-            </div>
+            </section>
             
-            <div class="tutorial-detail">
-                <div class="tutorial-header">
-                    <h2>Origami Butterfly - Detailed Tutorial</h2>
-                    <div class="tutorial-meta">
-                        <span><i class="far fa-user"></i> Mariano Zavala Style</span>
-                        <span><i class="far fa-calendar"></i> Published: June 15, 2023</span>
-                    </div>
-                    <div class="tutorial-stats">
-                        <span><i class="far fa-clock"></i> 20 minutes</span>
-                        <span><i class="far fa-chart-bar"></i> Intermediate</span>
-                        <span><i class="far fa-eye"></i> 12,543 views</span>
-                    </div>
+            <!-- Categories Section -->
+            <section class="categories">
+                <div class="section-title">
+                    <h2>Browse by Category</h2>
                 </div>
                 
-                <div class="tutorial-video">
-                    <!-- Placeholder for video -->
-                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#1a2530;color:white;font-size:1.2rem;">
-                        <i class="fas fa-play-circle" style="font-size:3rem;margin-right:1rem;"></i>
-                        Tutorial Video Player
-                    </div>
-                </div>
-                
-                <div class="materials">
-                    <h3>Materials Needed</h3>
-                    <ul>
-                        <li><i class="fas fa-check"></i> 1 square sheet of paper (15x15 cm)</li>
-                        <li><i class="fas fa-check"></i> Clean, flat working surface</li>
-                        <li><i class="fas fa-check"></i> Optional: Bone folder for crisp folds</li>
-                    </ul>
-                </div>
-                
-                <div class="tutorial-steps">
-                    <h3>Step-by-Step Instructions</h3>
-                    
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h3>Create Preliminary Base</h3>
-                            <p>Start with your paper color side down. Fold diagonally in both directions, then unfold. Flip the paper over and fold in half horizontally and vertically, then unfold. You should have a grid of creases.</p>
+                <div class="tutorial-grid">
+                    <div class="tutorial-card" data-category="animals">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1578001268252-fa8d0dd94281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Animal Origami">
                         </div>
-                        <div class="step-image">
-                            <img src="https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Step 1">
+                        <div class="card-content">
+                            <h3>Animal Origami</h3>
+                            <p>Create amazing animals from paper - from simple birds to complex dragons.</p>
+                            <a href="#" class="btn" style="margin-top: 1rem; display: inline-block;">Browse Animals</a>
                         </div>
                     </div>
                     
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h3>Form the Body</h3>
-                            <p>Collapse the paper along the creases to form a square base. This is the foundation for many origami models. Make sure all folds are precise for best results.</p>
+                    <div class="tutorial-card" data-category="flowers">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1518843025960-d60217f226f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Flower Origami">
                         </div>
-                        <div class="step-image">
-                            <img src="https://images.unsplash.com/photo-1586105449897-20b5efeb3233?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Step 2">
-                        </div>
-                    </div>
-                    
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h3>Shape the Wings</h3>
-                            <p>Carefully fold the top layers down to create the butterfly's wings. Pay attention to symmetry as this will determine how balanced your final model looks.</p>
-                        </div>
-                        <div class="step-image">
-                            <img src="https://images.unsplash.com/photo-1518843025960-d60217f226f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Step 3">
+                        <div class="card-content">
+                            <h3>Flower Origami</h3>
+                            <p>Beautiful paper flowers that never wilt. Perfect for decorations and gifts.</p>
+                            <a href="#" class="btn" style="margin-top: 1rem; display: inline-block;">Browse Flowers</a>
                         </div>
                     </div>
                     
-                    <div class="step">
-                        <div class="step-number">4</div>
-                        <div class="step-content">
-                            <h3>Final Adjustments</h3>
-                            <p>Gently curve the wings to give your butterfly a more natural appearance. Make small adjustments until you're happy with the shape. Your origami butterfly is complete!</p>
+                    <div class="tutorial-card" data-category="complex">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1585416354807-87e551067b73?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Complex Origami">
                         </div>
-                        <div class="step-image">
-                            <img src="https://images.unsplash.com/photo-1578001268252-fa8d0dd94281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Step 4">
+                        <div class="card-content">
+                            <h3>Complex Models</h3>
+                            <p>Challenge yourself with intricate designs by masters like Satoshi Kamiya.</p>
+                            <a href="#" class="btn" style="margin-top: 1rem; display: inline-block;">Browse Complex</a>
                         </div>
                     </div>
                 </div>
+            </section>
+        </div>
+        
+        <!-- Tutorial Detail Page -->
+        <div id="tutorial-page">
+            <a href="#" class="back-button" id="back-button"><i class="fas fa-arrow-left"></i> Back to Tutorials</a>
+            
+            <div class="tutorial-detail" id="tutorial-detail">
+                <!-- Tutorial content will be generated by JavaScript -->
             </div>
-        </section>
+        </div>
+        
+        <!-- Page Navigation -->
+        <div class="page-navigation" id="page-navigation">
+            <a href="#" id="prev-page"><i class="fas fa-chevron-left"></i> Previous</a>
+            <a href="#" id="next-page">Next <i class="fas fa-chevron-right"></i></a>
+        </div>
     </div>
     
     <!-- Footer -->
@@ -737,8 +721,8 @@
                 <ul class="footer-links">
                     <li><a href="#"><i class="fas fa-chevron-right"></i> Animals</a></li>
                     <li><a href="#"><i class="fas fa-chevron-right"></i> Flowers</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Complex Models</a></li>
                     <li><a href="#"><i class="fas fa-chevron-right"></i> Modular Origami</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> Holiday Themes</a></li>
                     <li><a href="#"><i class="fas fa-chevron-right"></i> Geometric Shapes</a></li>
                 </ul>
             </div>
@@ -759,47 +743,143 @@
     </footer>
 
     <script>
-        // Simple JavaScript for interactive elements
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add active class to navigation links on click
-            const navLinks = document.querySelectorAll('nav a');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
-            
-            // Tutorial card hover effect enhancement
-            const tutorialCards = document.querySelectorAll('.tutorial-card');
-            tutorialCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-10px)';
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0)';
-                });
-            });
-            
-            // Simple search functionality
-            const searchInput = document.querySelector('.search-bar input');
-            const searchButton = document.querySelector('.search-bar button');
-            
-            searchButton.addEventListener('click', function() {
-                const searchTerm = searchInput.value.toLowerCase();
-                if (searchTerm) {
-                    alert('Searching for: ' + searchTerm);
-                    // In a real implementation, this would filter the tutorials
-                }
-            });
-            
-            searchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    searchButton.click();
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+        // Tutorial Data - Real models with actual photos and appropriate tutorials
+        const tutorials = [
+            {
+                id: 1,
+                title: "Origami Butterfly",
+                category: "animals",
+                difficulty: "beginner",
+                duration: "15 min",
+                image: "https://images.unsplash.com/photo-1578001268252-fa8d0dd94281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80",
+                description: "A beautiful and simple butterfly perfect for beginners.",
+                video: "https://www.youtube.com/embed/VgXwSd5O5o8", // Mariano Zavala's butterfly tutorial
+                materials: [
+                    "1 square sheet of paper (15x15 cm)",
+                    "Clean, flat working surface"
+                ],
+                steps: [
+                    {
+                        title: "Create Preliminary Base",
+                        description: "Start with your paper color side down. Fold diagonally in both directions, then unfold.",
+                        image: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+                    },
+                    {
+                        title: "Form the Body",
+                        description: "Collapse the paper along the creases to form a square base.",
+                        image: "https://images.unsplash.com/photo-1586105449897-20b5efeb3233?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Satoshi Kamiya's Ancient Dragon",
+                category: "complex",
+                difficulty: "expert",
+                duration: "4+ hours",
+                image: "https://images.unsplash.com/photo-1585416354807-87e551067b73?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80",
+                description: "One of the most complex and impressive origami dragons ever designed.",
+                video: null, // No Mariano Zavala tutorial available
+                materials: [
+                    "1 large square sheet of paper (50x50 cm or larger)",
+                    "Tissue foil or specialty origami paper recommended",
+                    "Patience and a lot of time!"
+                ],
+                steps: [
+                    {
+                        title: "Preliminary Base and Initial Creases",
+                        description: "Start with a bird base and create the complex crease pattern for the dragon.",
+                        image: "https://images.unsplash.com/photo-1518843025960-d60217f226f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+                    },
+                    {
+                        title: "Forming the Head and Neck",
+                        description: "Carefully shape the intricate head structure with horns and details.",
+                        image: "https://images.unsplash.com/photo-1578001268252-fa8d0dd94281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+                    },
+                    {
+                        title: "Creating the Wings",
+                        description: "Fold and shape the impressive wings with membrane details.",
+                        image: "https://images.unsplash.com/photo-1585416354807-87e551067b73?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+                    },
+                    {
+                        title: "Final Detailing",
+                        description: "Add the final touches to legs, tail, and scales to complete your dragon.",
+                        image: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Origami Rose",
+                category: "flowers",
+                difficulty: "intermediate",
+                duration: "30 min",
+                image: "https://images.unsplash.com/photo-1518843025960-d60217f226f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80",
+                description: "A beautiful rose that looks almost real. Perfect for gifts.",
+                video: "https://www.youtube.com/embed/KOpbV7hqBBc", // Mariano Zavala's rose tutorial
+                materials: [
+                    "1 square sheet of paper (15x15 cm)",
+                    "Green paper for stem and leaves (optional)"
+                ],
+                steps: [
+                    {
+                        title: "Create the Base",
+                        description: "Start with a waterbomb base and prepare for the petal folds.",
+                        image: "https://images.unsplash.com/photo-1586105449897-20b5efeb3233?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+                    },
+                    {
+                        title: "Form the Petals",
+                        description: "Carefully fold and curl each petal to create a natural rose shape.",
+                        image: "https://images.unsplash.com/photo-1518843025960-d60217f226f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Modular Sonobe Cube",
+                category: "modular",
+                difficulty: "intermediate",
+                duration: "45 min",
+                image: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80",
+                description: "A classic modular origami project using Sonobe units.",
+                video: "https://www.youtube.com/embed/UNkHMPn3Lx8", // Mariano Zavala's modular tutorial
+                materials: [
+                    "6 square sheets of paper (10x10 cm each)",
+                    "Patience for assembly"
+                ],
+                steps: [
+                    {
+                        title: "Fold the Sonobe Units",
+                        description: "Create 6 identical Sonobe units with precise folds.",
+                        image: "https://images.unsplash.com/photo-1578001268252-fa8d0dd94281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+                    },
+                    {
+                        title: "Assemble the Cube",
+                        description: "Connect the units together to form a stable cube structure.",
+                        image: "https://images.unsplash.com/photo-1585416354807-87e551067b73?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Origami Elephant",
+                category: "animals",
+                difficulty: "intermediate",
+                duration: "25 min",
+                image: "https://images.unsplash.com/photo-1586105449897-20b5efeb3233?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80",
+                description: "A cute elephant with nice details like tusks and trunk.",
+                video: "https://www.youtube.com/embed/6Q5Q6Q5Q6Q5", // Placeholder
+                materials: [
+                    "1 square sheet of paper (20x20 cm)",
+                    "Gray or colored paper for effect"
+                ],
+                steps: [
+                    {
+                        title: "Create the Base",
+                        description: "Start with a bird base and prepare for the elephant structure.",
+                        image: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+                    },
+                    {
+                        title: "Form the Head and Trunk",
+                        description: "Shape the distinctive elephant head and long trunk.",
+                        image: "https://images.unsplash
